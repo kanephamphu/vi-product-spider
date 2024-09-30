@@ -1,6 +1,7 @@
 package com.vicoupon.amazon;
 
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import com.vicoupon.common.AbstractCrawler;
 import com.vicoupon.common.config.CrawlerConfig;
@@ -27,7 +28,7 @@ public class AmazonCrawler extends AbstractCrawler {
 
             // Extract product details (example)
             String productName = doc.select("#productTitle").text();
-            double productPrice = CrawlerUtils.extractPrice(doc);
+            double productPrice = extractPrice(doc);
             String productUrl = config.getTargetUrl();
 
             log("Crawl complete for Amazon");
@@ -37,5 +38,17 @@ public class AmazonCrawler extends AbstractCrawler {
             handleError(e);
             return null;
         }
+    }
+
+    private double extractPrice(Document document) {
+        // Select the relevant elements
+        Element priceSymbol = document.selectFirst(".a-price-symbol");
+        Element priceWhole = document.selectFirst(".a-price-whole");
+        Element priceFraction = document.selectFirst(".a-price-fraction");
+
+        // Construct the full price string
+        String price = priceWhole.text() + priceFraction.text();
+
+        return Double.parseDouble(price);
     }
 }
