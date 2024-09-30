@@ -1,5 +1,7 @@
 package com.vicoupon.amazon;
 
+import org.jsoup.nodes.Document;
+
 import com.vicoupon.common.AbstractCrawler;
 import com.vicoupon.common.config.CrawlerConfig;
 import com.vicoupon.common.models.CrawlerResult;

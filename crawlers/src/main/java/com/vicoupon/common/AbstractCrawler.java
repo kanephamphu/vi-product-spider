@@ -1,6 +1,8 @@
 package com.vicoupon.common;
 
 import com.vicoupon.common.config.CrawlerConfig;
+import com.vicoupon.common.exceptions.CrawlerException;
+import com.vicoupon.common.models.CrawlerResult;
 
 public abstract class AbstractCrawler implements Crawler {
     protected CrawlerConfig config;
