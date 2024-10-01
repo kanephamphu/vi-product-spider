@@ -7,7 +7,7 @@ import com.vicoupon.ebay.EbayCrawler;
 import com.vicoupon.walmart.WalmartCrawler;
 
 public class CrawlerFactory {
-    public Crawler create(String url, CrawlerProvider crawlerProvider) {
+    public static Crawler create(String url, CrawlerProvider crawlerProvider) {
         CrawlerConfig config = new CrawlerConfig(url, 0);
 
         return switch (crawlerProvider) {

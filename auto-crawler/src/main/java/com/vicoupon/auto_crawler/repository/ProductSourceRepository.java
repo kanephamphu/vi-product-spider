@@ -1,9 +1,9 @@
 package com.vicoupon.auto_crawler.repository;
 
-import com.vicoupon.auto_crawler.model.ProductSource;
+import org.springframework.data.jpa.repository.JpaRepository;
+import com.vicoupon.auto_crawler.entities.ProductSource;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
-public interface ProductSourceRepository {
-    List<ProductSource> getAllSources();
+@Repository
+public interface ProductSourceRepository extends JpaRepository<ProductSource, String> {
 }
