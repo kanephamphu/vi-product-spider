@@ -1,12 +1,16 @@
 package com.vicoupon.auto_crawler.service.impl;
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.vicoupon.auto_crawler.config.AmazonConfiguration;
 import com.vicoupon.auto_crawler.model.ProductPrice;
 import com.vicoupon.auto_crawler.service.CsvExportService;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
@@ -19,10 +23,15 @@ import java.util.List;
 @Service
 public class CsvExportServiceImpl implements CsvExportService {
     private final AmazonS3 s3Client;
-    private final String bucketName = "your-s3-bucket-name"; // Replace with your bucket name
+    private final String bucketName = "vicoupon"; // Replace with your bucket name
 
-    public CsvExportServiceImpl() {
-        this.s3Client = AmazonS3ClientBuilder.defaultClient();
+    public CsvExportServiceImpl(AmazonConfiguration amazonConfiguration) {
+        BasicAWSCredentials awsCredentials = new BasicAWSCredentials(amazonConfiguration.getAccessKey(), amazonConfiguration.getSecretKey());
+
+        this.s3Client = AmazonS3ClientBuilder.standard()
+                .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
+                .withRegion(amazonConfiguration.getRegion())
+                .build();
     }
 
     @Override

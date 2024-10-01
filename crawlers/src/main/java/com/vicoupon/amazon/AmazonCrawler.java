@@ -7,6 +7,7 @@ import com.vicoupon.common.AbstractCrawler;
 import com.vicoupon.common.config.CrawlerConfig;
 import com.vicoupon.common.models.CrawlerResult;
 import com.vicoupon.common.utils.CrawlerUtils;
+import org.jsoup.select.Elements;
 
 public class AmazonCrawler extends AbstractCrawler {
     public AmazonCrawler(CrawlerConfig config) {
@@ -28,14 +29,26 @@ public class AmazonCrawler extends AbstractCrawler {
 
             // Extract product details (example)
             String productName = doc.select("#productTitle").text();
-            double productPrice = extractPrice(doc);
+            double productPrice = -1;
+
+            try {
+                productPrice = extractPrice(doc);
+            } catch (Exception exception) {
+                productPrice = extractPriceRange(doc)[0];
+            }
+
+            if (productPrice == -1 || productPrice == 0.0) {
+                throw new Exception("Error when crawling");
+            }
+
             String productUrl = config.getTargetUrl();
 
             log("Crawl complete for Amazon");
 
             return new CrawlerResult(productName, productPrice, productUrl);
         } catch (Exception e) {
-            handleError(e);
+            System.out.println("Error when crawling: " + config.getTargetUrl());
+
             return null;
         }
     }
@@ -50,5 +63,25 @@ public class AmazonCrawler extends AbstractCrawler {
         String price = priceWhole.text() + priceFraction.text();
 
         return Double.parseDouble(price);
+    }
+
+    private double[] extractPriceRange(Document document) {
+        // Select the price range element
+        Elements priceElements = document.select("span.a-price-range span.a-price");
+
+        if (priceElements.size() == 2) {
+            // Get the minimum and maximum prices
+            String minPriceText = priceElements.get(0).select("span.a-offscreen").text().replace("$", "").trim();
+            String maxPriceText = priceElements.get(1).select("span.a-offscreen").text().replace("$", "").trim();
+
+            // Convert to double
+            double minPrice = Double.parseDouble(minPriceText);
+            double maxPrice = Double.parseDouble(maxPriceText);
+
+            return new double[]{minPrice, maxPrice}; // Returning as an array [minPrice, maxPrice]
+        }
+
+        // Return empty array if price elements are not found
+        return new double[]{0.0, 0.0}; // or handle accordingly
     }
 }

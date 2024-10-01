@@ -10,6 +10,7 @@ import com.vicoupon.common.CrawlerFactory;
 import com.vicoupon.common.constants.CrawlerProvider;
 import com.vicoupon.common.models.CrawlerResult;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -42,6 +43,10 @@ public class ProductSourceServiceImpl implements ProductSourceService {
 
 
     private ProductPrice toProductPrice(ProductSource productSource, CrawlerResult crawlerResult) {
+        if (ObjectUtils.isEmpty(crawlerResult)) {
+            return null;
+        }
+
         return new ProductPrice
                 .Builder()
                 .setId(productSource.getId())
