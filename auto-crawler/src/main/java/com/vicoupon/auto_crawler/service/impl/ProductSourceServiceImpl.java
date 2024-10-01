@@ -3,9 +3,11 @@ package com.vicoupon.auto_crawler.service.impl;
 import com.vicoupon.auto_crawler.entities.ProductSource;
 import com.vicoupon.auto_crawler.model.ProductPrice;
 import com.vicoupon.auto_crawler.repository.ProductSourceRepository;
+import com.vicoupon.auto_crawler.service.CsvExportService;
 import com.vicoupon.auto_crawler.service.ProductSourceService;
 import com.vicoupon.common.Crawler;
 import com.vicoupon.common.CrawlerFactory;
+import com.vicoupon.common.constants.CrawlerProvider;
 import com.vicoupon.common.models.CrawlerResult;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +17,12 @@ import java.util.Objects;
 @Service
 public class ProductSourceServiceImpl implements ProductSourceService {
     private final ProductSourceRepository productSourceRepository;
+    private final CsvExportService csvExportService;
 
-    public ProductSourceServiceImpl(ProductSourceRepository productSourceRepository) {
+    public ProductSourceServiceImpl(ProductSourceRepository productSourceRepository,
+                                    CsvExportService csvExportService) {
         this.productSourceRepository = productSourceRepository;
+        this.csvExportService = csvExportService;
     }
 
     @Override
@@ -31,6 +36,8 @@ public class ProductSourceServiceImpl implements ProductSourceService {
                 })
                 .filter(Objects::nonNull)
                 .toList();
+
+        this.csvExportService.exportProducePrices(productPrices, "produce_price.csv");
     }
 
 

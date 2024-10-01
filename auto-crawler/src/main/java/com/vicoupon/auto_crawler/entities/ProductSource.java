@@ -4,7 +4,7 @@ import com.vicoupon.common.constants.CrawlerProvider;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "product_source")
+@Table(name = "product_sources")
 public class ProductSource {
 
     @Id
