@@ -39,5 +39,5 @@
 
 For more information or support, contact us at:
 
-- **Email**: [support@vicoupon.com](mailto:support@vicoupon.com)
+- **Email**: [contact@vicoupon.com](mailto:contact@vicoupon.com)
 - **Website**: [ViCoupon.com](https://vicoupon.com)
